@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lluvia de Corazones</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            overflow: hidden; /* Para que la lluvia no salga de los límites */
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .options {
+            display: flex;
+            gap: 2rem; /* Espaciado entre los botones */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .option {
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: 2px solid #000;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .option:hover {
+            transform: scale(1.1);
+        }
+
+        .option.no {
+            background-color: #f44336;
+            color: white;
+            position: relative;
+        }
+
+        .option.yes {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .heart {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: red;
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 50% 75%, 18% 100%, 0% 38%);
+            animation: fall 3s linear infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="main-container">
+        <h1 id="title">¿Me quieres?</h1>
+        <div class="options">
+            <div class="option yes" id="yes-button">Te amo</div>
+            <div class="option no" id="no-button">No</div>
+        </div>
+    </div>
+
+    <script>
+        const yesButton = document.getElementById("yes-button");
+        const noButton = document.getElementById("no-button");
+        const container = document.getElementById("main-container");
+
+        // Movimiento del botón "No"
+        const moveDistance = 150; // Distancia máxima de movimiento en píxeles
+        noButton.addEventListener("mouseover", () => {
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+
+            const randomX = Math.random() * (screenWidth - noButton.offsetWidth);
+            const randomY = Math.random() * (screenHeight - noButton.offsetHeight);
+
+            noButton.style.position = "absolute";
+            noButton.style.left = `${randomX}px`;
+            noButton.style.top = `${randomY}px`;
+        });
+
+        // Lluvia de corazones al presionar "Te amo"
+        yesButton.addEventListener("click", () => {
+            // Eliminar elementos visibles
+            container.style.display = "none";
+
+            // Crear lluvia de corazones
+            createHearts();
+        });
+
+        function createHearts() {
+            const body = document.body;
+            for (let i = 0; i < 100; i++) { // Crear 100 corazones
+                const heart = document.createElement("div");
+                heart.classList.add("heart");
+
+                // Generar posición aleatoria y tiempo de inicio
+                const startX = Math.random() * window.innerWidth;
+                const startDelay = Math.random() * 5; // Hasta 5 segundos de retraso
+
+                heart.style.left = `${startX}px`;
+                heart.style.animationDelay = `${startDelay}s`;
+
+                body.appendChild(heart);
+
+                // Eliminar corazón del DOM después de su animación
+                heart.addEventListener("animationend", () => {
+                    heart.remove();
+                });
+            }
+        }
+    </script>
+</body>
+</html>
